@@ -102,7 +102,7 @@ export default function App() {
     if (name) {
       // Adjusted for Spark Tank frame orange bar
       const barX = 200;
-      const barY = 630; 
+      const barY = 650; 
       const barWidth = 680;
       const barHeight = 85;
       const centerX = barX + barWidth / 2;
