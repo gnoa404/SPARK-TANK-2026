@@ -53,10 +53,10 @@ export default function App() {
 
     // Coordinates for the photo window (based on the 1080x1080 canvas)
     // Based on the Spark Tank frame image:
-    const windowX = 155;
-    const windowY = 205;
-    const windowWidth = 770;
-    const windowHeight = 445;
+    const windowX = 78;
+    const windowY = 190;
+    const windowWidth = 924;
+    const windowHeight = 534;
     const borderRadius = 40;
 
     // 1. Draw User Photo (First, so it's under the frame)
@@ -102,7 +102,7 @@ export default function App() {
     if (name) {
       // Adjusted for Spark Tank frame orange bar
       const barX = 200;
-      const barY = 650; 
+      const barY = 685; 
       const barWidth = 680;
       const barHeight = 85;
       const centerX = barX + barWidth / 2;
