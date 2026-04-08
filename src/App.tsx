@@ -51,37 +51,46 @@ export default function App() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Coordinates for the photo window (based on the 1080x1080 canvas)
+    // Based on the Spark Tank frame image:
+    const windowX = 155;
+    const windowY = 205;
+    const windowWidth = 770;
+    const windowHeight = 445;
+    const borderRadius = 40;
+
     // 1. Draw User Photo (First, so it's under the frame)
     if (userImgRef.current) {
       const img = userImgRef.current;
       
       ctx.save();
-      // No clipping path - let the photo fill the entire frame area
-      // The frame overlay will handle the transparency/cutout
+      // Create clipping path for the rounded window
+      ctx.beginPath();
+      ctx.roundRect(windowX, windowY, windowWidth, windowHeight, borderRadius);
+      ctx.clip();
 
       const imgAspect = img.width / img.height;
-      const canvasAspect = canvas.width / canvas.height;
+      const windowAspect = windowWidth / windowHeight;
 
       let drawWidth, drawHeight;
 
-      // "Cover" strategy: fill the entire canvas
-      if (imgAspect > canvasAspect) {
-        drawHeight = canvas.height * zoom;
-        drawWidth = (img.width * (canvas.height / img.height)) * zoom;
+      if (imgAspect > windowAspect) {
+        drawHeight = windowHeight * zoom;
+        drawWidth = (img.width * (windowHeight / img.height)) * zoom;
       } else {
-        drawWidth = canvas.width * zoom;
-        drawHeight = (img.height * (canvas.width / img.width)) * zoom;
+        drawWidth = windowWidth * zoom;
+        drawHeight = (img.height * (windowWidth / img.width)) * zoom;
       }
 
-      const offsetX = (canvas.width - drawWidth) / 2 + offset.x;
-      const offsetY = (canvas.height - drawHeight) / 2 + offset.y;
+      const offsetX = windowX + (windowWidth - drawWidth) / 2 + offset.x;
+      const offsetY = windowY + (windowHeight - drawHeight) / 2 + offset.y;
 
       ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
       ctx.restore();
     } else {
-      // Placeholder background for the entire canvas if no photo
+      // Placeholder background for the window area if no photo
       ctx.fillStyle = '#1A0B2E';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(windowX, windowY, windowWidth, windowHeight);
     }
 
     // 2. Draw Frame Overlay (On top of the photo)
@@ -91,11 +100,11 @@ export default function App() {
 
     // 3. Draw Name Text (On top of everything)
     if (name) {
-      // Adjusted for the bottom orange bar in the frame
-      const barX = 140;
-      const barY = 815; 
-      const barWidth = 800;
-      const barHeight = 130;
+      // Adjusted for Spark Tank frame orange bar
+      const barX = 200;
+      const barY = 630; 
+      const barWidth = 680;
+      const barHeight = 85;
       const centerX = barX + barWidth / 2;
       const centerY = barY + barHeight / 2; 
 
@@ -104,18 +113,18 @@ export default function App() {
       ctx.textBaseline = 'middle';
       
       // Auto-shrink font size
-      let fontSize = 72;
+      let fontSize = 58;
       ctx.font = `900 ${fontSize}px Orbitron`;
       
       // Measure text and shrink if needed
-      while (ctx.measureText(name).width > barWidth - 60 && fontSize > 24) {
+      while (ctx.measureText(name).width > barWidth - 40 && fontSize > 18) {
         fontSize--;
         ctx.font = `900 ${fontSize}px Orbitron`;
       }
 
       // Subtle shadow for depth
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-      ctx.shadowBlur = 8;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+      ctx.shadowBlur = 6;
       ctx.fillText(name, centerX, centerY);
       ctx.shadowBlur = 0;
     }
